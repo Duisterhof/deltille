@@ -40,16 +40,18 @@ using namespace std;
 bool writeCornersToFile(std::ostream &os,
                         const std::vector<CalibrationCorner> &corners,
                         string filename, const cv::Size &image_size,
-                        bool write_ordered_only = true) {
-
+                        bool write_ordered_only = false) {
+  
   auto num_corners = corners.size();
+  std::cout << std::to_string(num_corners) << std::endl;
   if(write_ordered_only) {
     num_corners = 0;
     for(auto& c : corners) {
+
       num_corners += c.isValid() && c.isOrdered;
     }
   }
-
+  std::cout << std::to_string(num_corners) << std::endl;
   cout << "writing " << num_corners << "\n";
 
   os << "filename: " << filename << endl;
@@ -164,7 +166,7 @@ void RunDetector(DataSource *data_source, string target_dsc_fn,
   }
 
   auto do_write_corners = !output_dir.string().empty();
-
+  
   // NOTE: if debug == false, this could be run in parallel
   cv::Mat I, debug_image;
   for (int i = 0; data_source->getImage(I, i); ++i) {
@@ -180,7 +182,7 @@ void RunDetector(DataSource *data_source, string target_dsc_fn,
  
         std::ofstream file(output_filename.string());
         if (file.is_open()) {
-          writeCornersToFile(file, corners, filename, I.size(), true);
+          writeCornersToFile(file, corners, filename, I.size(), false);
         } else {
           cerr << "Failed to open: " << output_filename << " for writing"
                << endl;
