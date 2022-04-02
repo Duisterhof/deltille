@@ -15,7 +15,18 @@
 ## Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
 find_package(Matlab REQUIRED COMPONENTS MX_LIBRARY)
-include(${CMAKE_SOURCE_DIR}/cmake/mexmat.cmake)
+# include(${CMAKE_SOURCE_DIR}/cmake/mexmat.cmake)
+include_directories(${CMAKE_SOURCE_DIR}/include/mexmat)
+set(MexMat_INCLUDE_DIRS ${CMAKE_SOURCE_DIR}/include/mexmat)
+add_library(mexmat INTERFACE)
+
+target_include_directories(mexmat INTERFACE
+  $<BUILD_INTERFACE:${MexMat_INCLUDE_DIRS}>
+  $<INSTALL_INTERFACE:include>)
+
+target_compile_definitions(mexmat INTERFACE 
+  -DMEXMAT_WITH_OPENCV)
+
 
 matlab_add_mex(
   NAME deltille_detector_mex
