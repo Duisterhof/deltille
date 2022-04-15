@@ -796,6 +796,7 @@ void TaggedBoardIndexer::fixCheckerBoards(
             ofsy[oy] = 1;
         }
       }
+    // we comment this out to accomodate for board that are not evenly spaced between all corners
     if (ofsx.size() > 1 || ofsy.size() > 1) {
       printf("Inconsistent X,Y offsets:\n");
       for (auto &&ofs : ofsx)

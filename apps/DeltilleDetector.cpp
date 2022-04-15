@@ -43,12 +43,14 @@ bool writeCornersToFile(std::ostream &os,
                         bool write_ordered_only = false) {
   
   auto num_corners = corners.size();
-  std::cout << std::to_string(num_corners) << std::endl;
   if(write_ordered_only) {
     num_corners = 0;
-    for(auto& c : corners) {
-
-      num_corners += c.isValid() && c.isOrdered;
+    for(auto &c : corners) {
+      if (!c.isValid() || (write_ordered_only && !c.isOrdered)) {
+        continue;
+      }
+      num_corners++;
+      // num_corners += c.isValid() && c.isOrdered;
     }
   }
   std::cout << std::to_string(num_corners) << std::endl;
@@ -62,14 +64,15 @@ bool writeCornersToFile(std::ostream &os,
 
   auto p = os.precision();
   os.precision(numeric_limits<double>::max_digits10);
+  num_corners = 0;
   for (auto &c : corners) {
     if (!c.isValid() || (write_ordered_only && !c.isOrdered)) {
       continue;
     }
+    num_corners++;
 
     os << c << endl;
   }
-
   os.precision(p);
   return os.good();
 }
@@ -182,7 +185,7 @@ void RunDetector(DataSource *data_source, string target_dsc_fn,
  
         std::ofstream file(output_filename.string());
         if (file.is_open()) {
-          writeCornersToFile(file, corners, filename, I.size(), false);
+          writeCornersToFile(file, corners, filename, I.size(), true);
         } else {
           cerr << "Failed to open: " << output_filename << " for writing"
                << endl;

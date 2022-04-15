@@ -39,13 +39,13 @@
 struct CalibrationCorner {
   int boardId;   //< the board id
   int pointId;   //< point index
-  int isOrdered; //< 1 if ordered
+  bool isOrdered; //< 1 if ordered
 
   double x; //< x-coordinate (column)
   double y; //< y-coordinate (row)
 
   CalibrationCorner(double x_ = -1.0, double y_ = -1.0, int b_id = -1,
-                    int p_id = -1, int o = 0)
+                    int p_id = -1, bool o = true)
       : boardId(b_id), pointId(p_id), isOrdered(o), x(x_), y(y_) {}
 
   bool isValid() const { return CalibrationCorner::IsValid(*this); }
